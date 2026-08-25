@@ -18,8 +18,8 @@ const H = 630
 
 // Espelha content/site.ts — apenas dados confirmados publicamente.
 const WORDMARK = 'BORMANN JR.'
-const ROLE = 'HAIR STYLIST  ·  VISAGISTA'
-const CREDENTIAL = 'EXPERT TEAM WELLA PROFESSIONALS BRASIL'
+const ROLE = 'HAIR STYLIST  ·  DIRETOR CRIATIVO'
+const CREDENTIAL = 'EXPERT TEAM WELLA PROFESSIONALS BRASIL  ·  BORMANN JR CONCEPT'
 const PLACE = 'SINOP — MATO GROSSO'
 
 const svg = `

@@ -1,4 +1,5 @@
 import { Reveal } from '@/components/motion/Reveal'
+import { BrandLockup } from '@/components/ui/BrandMark'
 import { FittedWordmark } from '@/components/ui/FittedWordmark'
 import {
   concept,
@@ -25,9 +26,11 @@ export function Footer() {
       <div className="shell">
         <div className="hairline grid grid-cols-12 gap-x-6 gap-y-10 py-12 lg:py-16">
           <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-            <p className="label mb-3">{person.role} / {person.discipline}</p>
-            <p className="display-sm text-[1.5rem]">{person.name}</p>
-            <p className="label mt-3">
+            <BrandLockup wordmark={concept.name} tagline={concept.tagline} />
+            <p className="label mt-5">
+              {person.role}
+              {person.discipline ? ` / ${person.discipline}` : ''}
+              <span aria-hidden="true" className="mx-2 text-accent">/</span>
               {concept.city} — {concept.stateFull}
             </p>
           </div>

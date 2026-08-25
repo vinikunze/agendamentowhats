@@ -1,8 +1,8 @@
 # Bormann Jr.
 
-Site editorial de marca pessoal para **Bormann Jr.** — hair stylist e visagista,
-Expert Team Wella Professionals Brasil e creative director do **Bormann Jr Concept**
-(Sinop — Mato Grosso).
+Site editorial de marca pessoal para **Bormann Jr.** — hair stylist,
+Expert Team Wella Professionals Brasil e diretor criativo do
+**Bormann Jr Concept** · *Concept Hair Expert* (Sinop — Mato Grosso).
 
 A hierarquia do site é conceitual, não comercial:
 
@@ -47,60 +47,76 @@ Ele está dividido em três naturezas, e a diferença importa:
 
 | Bloco | O que é |
 |---|---|
-| **confirmado** | Verificado em fonte pública (bio do Instagram, registro da empresa). Pode publicar. |
+| **confirmado** | Verificado em fonte pública (bios do Instagram, Google Business, registro da empresa). Está no ar. |
 | **`pending`** | Ainda não fornecido. Enquanto for `null` ou `[]`, **a seção correspondente não é renderizada**. |
 | **`draftCopy`** | Texto editorial provisório, escrito a partir do posicionamento real. Revisar na voz do Bormann. |
 
 ### A regra do projeto: nada é inventado
 
-Não há telefone, endereço, horário, lista de serviços, depoimento, número de
-clientes, tempo de carreira nem prêmio no site — porque nada disso foi
-confirmado. As seções que dependiam desses dados simplesmente não existem, em
-vez de existirem preenchidas com suposição.
+Contato, endereço e horário estão no site porque foram confirmados em duas
+fontes independentes. O que **não** está: lista de serviços, depoimentos,
+número de clientes, tempo de carreira, prêmios e preços — nada disso foi
+verificado, então nada disso aparece. As seções que dependeriam desses dados
+não existem, em vez de existirem preenchidas com suposição.
 
-Isso é reforçado por teste automatizado: `tests/site.spec.ts` falha se um
-`tel:` ou um link de WhatsApp aparecer na página sem o dado ter sido
-preenchido em `site.ts`.
+Isso é reforçado por teste automatizado. `tests/site.spec.ts` falha se:
+
+- aparecer um número de WhatsApp diferente do confirmado;
+- entrar na página um superlativo não verificado ("anos de experiência",
+  "mil clientes", "o melhor");
+- a seção de serviços ou de depoimentos aparecer sem os dados correspondentes.
+
+Ou seja: a regra não depende de ninguém lembrar dela.
+
+---
+
+## Dados reais já aplicados
+
+Confirmados nas bios oficiais do Instagram e na ficha do Google Business, e
+já no ar em `src/content/site.ts`:
+
+| Dado | Valor | Fonte |
+|---|---|---|
+| WhatsApp | `5566999021873` | link das bios de **@bormannjr** e **@bormannjrconcept** |
+| Telefone | (66) 99902-1873 | Google Business — **mesmo número** do WhatsApp |
+| Endereço | R. Tancredo Neves, 330 — Jardim Itália, Sinop/MT, 78555-324 | Google Business |
+| Horário | Terça a sábado, 09h às 18h | bio de @bormannjrconcept |
+| Cargo | Hair Stylist · Diretor Criativo | bio de @bormannjr |
+| Credencial | Expert Team Wella Professionals Brasil | bio de @bormannjr |
+| Cursos | Cursos VIPs | bio de @bormannjr |
+| Promessa | Atendimento personalizado | bio de @bormannjrconcept |
+| Assinatura | Concept Hair Expert | logotipo |
+
+Com isso, o CTA principal virou **"Agendar pelo WhatsApp"** e o Schema.org
+passou a publicar uma ficha `HairSalon` completa — endereço, telefone,
+horário de funcionamento e ação de agendamento.
+
+### ⚠️ Uma divergência a resolver
+
+A bio do Instagram diz **09h às 18h**; a ficha do Google diz que fecha às
+**19h**. O site segue a bio. Vale acertar o Google — ou corrigir `contact.hours`
+se o horário real for outro.
 
 ---
 
-## O que ainda precisa vir do cliente
+## O que ainda falta
 
-Preencha em `src/content/site.ts` e a seção correspondente aparece sozinha.
-
-**Contato — objeto `contact`**
-
-- [ ] `whatsapp` — só dígitos com DDI, ex.: `'5566999999999'`
-      → liga o CTA principal ao WhatsApp e cria o link no rodapé
-- [ ] `phoneDisplay` — telefone formatado para exibição
-- [ ] `bookingUrl` — plataforma de agendamento, se houver
-      → vira o destino do CTA primário, à frente do WhatsApp
-- [ ] `address` — logradouro, bairro, cidade, UF, CEP
-      → aparece na ficha do Concept, no rodapé e no Schema.org local
-- [ ] `hours` — dias e horários de atendimento
-- [ ] `email`, `mapsUrl`
-
-> ⚠️ Circulam em diretórios online um endereço e um telefone ligados ao
-> **Salão WSW** — marca relacionada, porém **distinta** do Bormann Jr Concept.
-> Nada disso foi confirmado, então nada disso está no código. Confirme antes de
-> preencher.
-
-**Serviços — array `services`**
-
-- [ ] Lista real dos serviços oferecidos. Vazio = seção não existe.
-
-**Prova social — array `testimonials`**
-
-- [ ] Depoimentos reais e autorizados. Vazio = seção não existe.
-
-**SEO — objeto `seo`**
-
-- [ ] `siteUrl` — trocar `https://bormannjr.com.br` pelo domínio real antes do
-      deploy (afeta canonical, sitemap, robots e OpenGraph).
-
-**Fotografia** — ver a seção abaixo.
-
----
+- [ ] **Fotografia** — hoje o site usa chapas de tom. Ver a seção abaixo.
+      É o item que mais muda o resultado.
+- [ ] **`seo.siteUrl`** — trocar `https://bormannjr.com.br` pelo domínio real
+      antes do deploy (afeta canonical, sitemap, robots e OpenGraph).
+- [ ] **`services`** — a lista real de serviços. Enquanto estiver vazia, a
+      seção não existe.
+- [ ] **`testimonials`** — depoimentos reais e autorizados. Idem.
+- [ ] **`person.discipline`** — a bio atual não repete "visagista", embora o
+      canal de vídeo e o Facebook usem o termo. Confirmar se continua no
+      posicionamento; se não, troque por `null` e a página se ajusta sozinha.
+- [ ] **`courses.detail`** — se quiser publicar formato, carga horária ou
+      próximas turmas dos Cursos VIPs.
+- [ ] **`contact.email`** e **`contact.mapsUrl`** — opcionais.
+- [ ] **Logotipo oficial** — o monograma JB do header e do rodapé é uma
+      reconstrução tipográfica (`components/ui/BrandMark.tsx`). Com o SVG
+      original em mãos, só esse arquivo muda.
 
 ## Fotografia
 
@@ -113,6 +129,20 @@ imagens de banco e não fingem ser fotos de ninguém.
 public/images/bormann/     retrato do hero, assinatura, galeria, fita do feed
 public/images/concept/     o espaço do salão
 ```
+
+### O retrato do hero é a peça mais importante
+
+O retrato editorial de Bormann Jr. (fundo escuro, blazer, luz lateral) é
+exatamente o registro que o layout foi desenhado para receber. Salve-o como:
+
+```
+public/images/bormann/hero-portrait.jpg
+```
+
+No desktop ele ocupa 55% da largura, à direita, com o degradê costurando a
+borda esquerda; no mobile vem inteiro no topo. Prefira um arquivo em retrato
+(3:4 ou mais alto) e com o rosto acima da metade da altura — o degradê e a
+tipografia trabalham a faixa inferior.
 
 ### Para colocar a fotografia real
 
@@ -208,11 +238,11 @@ src/
     blur-data.json      placeholders de blur (gerado)
   components/
     layout/             Header, Footer, SmoothScroll
-    sections/           Hero, Manifesto, Work, Concept, Services,
+    sections/           Hero, Manifesto, Work, Concept, Services, Courses,
                         Testimonials, InstagramStrip, FinalCta
     gallery/            WorkGallery, EditorialFigure
     motion/             Reveal, MaskReveal, LineReveal
-    ui/                 Cta, SectionHeading, FittedWordmark
+    ui/                 Cta, SectionHeading, FittedWordmark, BrandMark
   lib/
     motion.ts           vocabulário de movimento
     schema.ts           dados estruturados (só dado confirmado)
@@ -238,16 +268,23 @@ npm run audit    # axe-core + LCP/CLS (rodar contra o build de produção)
 npm run shots    # capturas por seção, para revisão de composição
 ```
 
-`npm run qa` percorre 375, 390, 430, 768, 1440 e 1920, mais uma passada com
-movimento reduzido, e salva as capturas e um relatório em `.qa/`.
+`npm run qa` percorre 375, 390, 430, 768, 1024, 1280, 1440 e 1920, mais uma
+passada com movimento reduzido, e salva as capturas e um relatório em `.qa/`.
+O 1024 está na lista porque é exatamente onde o menu desktop entra — a largura
+mais apertada em que logotipo, navegação e botão precisam caber numa linha.
+
+Alguns testes são de conteúdo, não de código: o suite falha se aparecer um
+número de WhatsApp diferente do confirmado, se a numeração das seções pular
+ou repetir, ou se entrar na página um superlativo não verificado
+("anos de experiência", "mil clientes", "o melhor").
 
 ### Estado atual
 
 - lint, typecheck e build de produção: limpos
-- Playwright: 17 passando
+- Playwright: 23 passando (desktop + mobile)
 - axe-core (WCAG 2.1 AA + best practice): 0 violações
-- CLS 0 · LCP ~276ms no desktop, ~1,35s no mobile
-- nenhum scroll horizontal, nenhum erro de console, em nenhum viewport
+- CLS 0 · LCP ~272ms no desktop, ~1,37s no mobile
+- nenhum scroll horizontal, nenhum erro de console, em nenhum dos 8 viewports
 
 ### Ambiente
 
@@ -265,6 +302,32 @@ HTML semântico, navegação por teclado, `focus-visible` visível em tudo, link
 pular para o conteúdo, menu mobile com foco preso e fechamento por `Esc`, alt
 text descritivo, contraste AA verificado nas duas superfícies, e alvos de toque
 ampliados em ponteiro grosso sem alterar o desenho no desktop.
+
+---
+
+## Publicar no GitHub
+
+O repositório é
+[vinikunze/bormannjrconcept](https://github.com/vinikunze/bormannjrconcept).
+O trabalho está commitado na branch `claude/bormann-jr-premium-site-i25vzv`.
+
+Para que as edições passem a ir direto para lá, o app do Claude precisa de
+permissão de escrita neste repositório — hoje o push volta com `403`. Um dos
+dois caminhos resolve:
+
+1. **Instalar/autorizar o app no repositório**
+   → https://github.com/apps/claude/installations/select_target
+   Escolha a conta `vinikunze` e marque `bormannjrconcept` (ou "All
+   repositories").
+
+2. **Reconectar o GitHub na sua conta Claude**
+   → claude.ai → Settings → Connectors → GitHub → reconectar.
+
+Feito isso, o push acontece normalmente:
+
+```bash
+git push -u origin claude/bormann-jr-premium-site-i25vzv
+```
 
 ---
 

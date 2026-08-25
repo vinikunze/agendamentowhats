@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/Footer'
 import { Concept } from '@/components/sections/Concept'
+import { Courses } from '@/components/sections/Courses'
 import { FinalCta } from '@/components/sections/FinalCta'
 import { Hero } from '@/components/sections/Hero'
 import { InstagramStrip } from '@/components/sections/InstagramStrip'
@@ -19,6 +20,7 @@ import { Work } from '@/components/sections/Work'
  *   TRABALHO      densidade máxima — a galeria
  *   CONCEPT       vira para o claro; o espaço
  *   SERVIÇOS      só aparece com dados confirmados
+ *   CURSOS        formação — o que sustenta a autoridade da marca pessoal
  *   DEPOIMENTOS   só aparece com dados confirmados
  *   INSTAGRAM     respiro, volta ao escuro
  *   CONTATO       fecho
@@ -34,6 +36,7 @@ export default function Home() {
         {/* A virada para a superfície clara acontece aqui. */}
         <Concept />
         <Services />
+        <Courses />
         <Testimonials />
 
         <InstagramStrip />

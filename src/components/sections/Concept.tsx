@@ -14,6 +14,7 @@ import {
   hasAddress,
   hasHours,
   person,
+  sectionIndex,
   social,
 } from '@/content/site'
 
@@ -54,7 +55,7 @@ export function Concept() {
       </div>
 
       <div className="shell pt-[clamp(3.5rem,8vh,6rem)]">
-        <SectionHeading index={copy.index} label={copy.label} />
+        <SectionHeading index={sectionIndex.concept} label={copy.label} />
 
         <div className="mt-12 grid grid-cols-12 gap-x-6 gap-y-12 lg:mt-20">
           {/* --- Título --- */}

@@ -194,18 +194,27 @@ export function Hero() {
             No mobile os três créditos empilham; a partir de sm voltam a
             correr numa linha só, separados pela barra em bronze.
           */}
+          {/*
+            Monta-se a partir do que existe: se `discipline` for zerado em
+            site.ts, o crédito continua fechando, sem barra sobrando.
+          */}
           <p className="label flex flex-col gap-1 sm:flex-row sm:gap-0">
-            <span>{person.role}</span>
-            <span aria-hidden="true" className="hidden text-accent sm:inline sm:mx-2">
-              /
-            </span>
-            <span>{person.discipline}</span>
-            <span aria-hidden="true" className="hidden text-accent sm:inline sm:mx-2">
-              /
-            </span>
-            <span>
-              {person.credential.label} {person.credential.brand}
-            </span>
+            {[
+              person.role,
+              person.discipline,
+              `${person.credential.label} ${person.credential.brand}`,
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <span key={item} className="contents">
+                  {i > 0 && (
+                    <span aria-hidden="true" className="hidden text-accent sm:inline sm:mx-2">
+                      /
+                    </span>
+                  )}
+                  <span>{item}</span>
+                </span>
+              ))}
           </p>
 
           <div aria-hidden="true" className="hidden shrink-0 items-center gap-3 lg:flex">

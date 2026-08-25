@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import { useLenis } from 'lenis/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { BrandMark } from '@/components/ui/BrandMark'
 import { EASE, EASE_INOUT } from '@/lib/motion'
 import { bookingHref, bookingLabel, nav, person, social } from '@/content/site'
 
@@ -120,15 +121,23 @@ export function Header() {
             href="#top"
             // `tap-none`: já tem altura de toque suficiente com o py próprio,
             // e o respiro extra empurraria o header inteiro para baixo.
-            className="link-underline tap-none -my-2 py-2 font-sans text-[0.8125rem] font-medium uppercase tracking-[0.22em] md:text-sm"
+            className="tap-none -my-2 flex items-center gap-3 py-2"
             aria-label={`${person.name} — início`}
           >
-            Bormann Jr.
+            <BrandMark className="h-7 w-auto shrink-0 md:h-8" />
+            <span className="link-underline font-sans text-[0.8125rem] font-light uppercase tracking-[0.22em] md:text-sm">
+              Bormann Jr.
+            </span>
           </a>
 
           {/* --- Navegação desktop --- */}
           <nav aria-label="Principal" className="hidden lg:block">
-            <ul className="flex items-center gap-9">
+            {/*
+              Em 1024 a linha inteira — logotipo, seis itens e botão — fica no
+              limite. O respiro cheio volta em 1280, e o Instagram (que já
+              aparece em três outros pontos da página) sai da barra até lá.
+            */}
+            <ul className="flex items-center gap-6 xl:gap-9">
               {nav.map((item) => (
                 <li key={item.href}>
                   <a href={item.href} className="link-underline label text-foreground">
@@ -136,7 +145,7 @@ export function Header() {
                   </a>
                 </li>
               ))}
-              <li>
+              <li className="hidden xl:block">
                 <a
                   href={social.personal.url}
                   target="_blank"
@@ -149,7 +158,7 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 xl:gap-5">
             <a
               href={bookingHref}
               target="_blank"

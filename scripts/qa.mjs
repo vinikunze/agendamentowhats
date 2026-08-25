@@ -20,6 +20,10 @@ const VIEWPORTS = [
   { name: '390x844-iphone-14', width: 390, height: 844, mobile: true },
   { name: '430x932-iphone-max', width: 430, height: 932, mobile: true },
   { name: '768x1024-ipad', width: 768, height: 1024, mobile: true },
+  // 1024 é exatamente onde o menu desktop entra: é a largura mais apertada
+  // em que a nav inteira, o logotipo e o botão precisam caber numa linha.
+  { name: '1024x768-limite-lg', width: 1024, height: 768, mobile: false },
+  { name: '1280x800-laptop-p', width: 1280, height: 800, mobile: false },
   { name: '1440x900-laptop', width: 1440, height: 900, mobile: false },
   { name: '1920x1080-desktop', width: 1920, height: 1080, mobile: false },
 ]

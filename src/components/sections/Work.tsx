@@ -1,7 +1,7 @@
 import { WorkGallery } from '@/components/gallery/WorkGallery'
 import { Reveal } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { draftCopy } from '@/content/site'
+import { draftCopy, sectionIndex } from '@/content/site'
 
 const { work } = draftCopy
 
@@ -9,7 +9,7 @@ export function Work() {
   return (
     <section id="trabalho" className="relative pb-[clamp(4rem,10vh,8rem)] pt-[var(--section-y)]">
       <div className="shell">
-        <SectionHeading index={work.index} label={work.label} />
+        <SectionHeading index={sectionIndex.trabalho} label={work.label} />
 
         <div className="mt-12 grid grid-cols-12 items-end gap-x-6 gap-y-6 lg:mt-16">
           <Reveal className="col-span-12 lg:col-span-6">

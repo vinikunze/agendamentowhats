@@ -57,9 +57,24 @@ test.describe('homepage', () => {
   test('expõe as seções principais', async ({ page }) => {
     await page.goto('/')
 
-    for (const id of ['assinatura', 'trabalho', 'concept', 'instagram', 'contato']) {
+    for (const id of ['assinatura', 'trabalho', 'concept', 'cursos', 'instagram', 'contato']) {
       await expect(page.locator(`#${id}`)).toBeAttached()
     }
+  })
+
+  test('a numeração das seções é sequencial, sem pulo nem repetição', async ({ page }) => {
+    await page.goto('/')
+
+    // Os índices são derivados do que está ativo em site.ts. Se uma seção
+    // for ligada ou desligada, a sequência tem de continuar fechando.
+    const indices = await page
+      .locator('[data-section-index]')
+      .evaluateAll((els) => els.map((el) => el.getAttribute('data-section-index') ?? ''))
+
+    expect(indices.length).toBeGreaterThan(0)
+    expect(indices).toEqual(
+      indices.map((_, i) => String(i + 1).padStart(2, '0')),
+    )
   })
 
   test('os links do Instagram apontam para os perfis reais', async ({ page }) => {
@@ -76,13 +91,58 @@ test.describe('homepage', () => {
     ).toBeAttached()
   })
 
-  test('não inventa contato: sem telefone, endereço ou WhatsApp', async ({ page }) => {
+  test('o contato exibido é o confirmado, e nada além dele', async ({ page }) => {
     await page.goto('/')
 
-    // Enquanto os dados não forem confirmados em content/site.ts, nada disso
-    // pode aparecer na página.
-    await expect(page.locator('a[href^="tel:"]')).toHaveCount(0)
-    await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0)
+    // O WhatsApp das duas bios do Instagram, que é também o telefone da
+    // ficha do Google. Se este número mudar em site.ts, o teste avisa.
+    const whats = page.locator('a[href^="https://wa.me/5566999021873"]')
+    await expect(whats.first()).toBeAttached()
+
+    // Nenhum outro número de WhatsApp pode aparecer na página.
+    const todos = await page.locator('a[href*="wa.me"]').evaluateAll((els) =>
+      els.map((el) => el.getAttribute('href') ?? ''),
+    )
+    for (const href of todos) {
+      expect(href).toContain('5566999021873')
+    }
+
+    // Endereço e horário confirmados aparecem no Concept.
+    await expect(page.locator('#concept')).toContainText('Tancredo Neves')
+    await expect(page.locator('#concept')).toContainText('09h às 18h')
+  })
+
+  test('não inventa o que não foi confirmado', async ({ page }) => {
+    await page.goto('/')
+
+    const texto = (await page.locator('body').innerText()).toLowerCase()
+
+    // Nada de superlativo, tempo de carreira ou volume de clientes — nenhum
+    // desses dados foi confirmado, então nenhum pode estar escrito.
+    for (const proibido of [
+      'anos de experiência',
+      'mil clientes',
+      'o melhor',
+      'a melhor',
+      'nº 1',
+      'referência da região',
+    ]) {
+      expect(texto, `texto não confirmado na página: "${proibido}"`).not.toContain(proibido)
+    }
+
+    // Sem lista de serviços confirmada, a seção não existe.
+    await expect(page.locator('#servicos')).toHaveCount(0)
+    // Sem depoimentos reais, a seção não existe.
+    await expect(page.locator('#depoimentos')).toHaveCount(0)
+  })
+
+  test('a seção de cursos leva ao WhatsApp com mensagem pronta', async ({ page }) => {
+    await page.goto('/')
+
+    await expect(page.locator('#cursos')).toContainText('Cursos VIPs')
+    await expect(
+      page.locator('#cursos a[href*="wa.me/5566999021873"][href*="text="]').first(),
+    ).toBeAttached()
   })
 
   test('nenhum scroll horizontal em nenhum ponto da página', async ({ page }) => {

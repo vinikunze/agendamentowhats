@@ -7,6 +7,7 @@ import {
   bookingLabel,
   concept,
   draftCopy,
+  sectionIndex,
   social,
   whatsappUrl,
 } from '@/content/site'
@@ -24,7 +25,7 @@ export function FinalCta() {
   return (
     <section id="contato" className="relative pb-[clamp(3rem,8vh,6rem)] pt-[var(--section-y)]">
       <div className="shell">
-        <SectionHeading index={finalCta.index} label={finalCta.label} />
+        <SectionHeading index={sectionIndex.contato} label={finalCta.label} />
 
         <div className="mt-14 grid grid-cols-12 gap-x-6 gap-y-12 lg:mt-20">
           <div className="col-span-12 lg:col-span-8">

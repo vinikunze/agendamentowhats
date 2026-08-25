@@ -4,7 +4,7 @@ import { MaskReveal } from '@/components/motion/MaskReveal'
 import { Reveal, RevealItem, StaggerGroup } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { blurFor, signatureImage } from '@/content/images'
-import { draftCopy, person } from '@/content/site'
+import { draftCopy, person, sectionIndex } from '@/content/site'
 
 const { manifesto } = draftCopy
 
@@ -19,7 +19,7 @@ export function Manifesto() {
   return (
     <section id="assinatura" className="section-y relative">
       <div className="shell">
-        <SectionHeading index={manifesto.index} label={manifesto.label} />
+        <SectionHeading index={sectionIndex.assinatura} label={manifesto.label} />
 
         <div className="mt-14 grid grid-cols-12 gap-x-6 gap-y-14 lg:mt-24">
           {/* --- A frase --- */}

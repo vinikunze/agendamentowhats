@@ -17,8 +17,12 @@ type Props = {
 export function SectionHeading({ index, label, className = '' }: Props) {
   return (
     <div className={`flex items-center gap-4 ${className}`}>
+      {/*
+        `data-section-index` distingue este número dos outros numerais
+        editoriais da página (as legendas da galeria também são 01, 02, 03…).
+      */}
       <Reveal as="span" className="label text-accent">
-        {index}
+        <span data-section-index={index}>{index}</span>
       </Reveal>
       {/* filete que se desenha da esquerda para a direita */}
       <Reveal

@@ -1,6 +1,6 @@
 import { Reveal, RevealItem, StaggerGroup } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { hasTestimonials, testimonials } from '@/content/site'
+import { hasTestimonials, sectionIndex, testimonials } from '@/content/site'
 
 /**
  * Prova social.
@@ -16,7 +16,7 @@ export function Testimonials() {
   return (
     <section id="depoimentos" className="section-y relative">
       <div className="shell">
-        <SectionHeading index="06" label="Depoimentos" />
+        <SectionHeading index={sectionIndex.depoimentos} label="Depoimentos" />
 
         <StaggerGroup
           className="mt-14 grid grid-cols-12 gap-x-6 gap-y-12 lg:mt-20"

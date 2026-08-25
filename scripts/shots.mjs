@@ -22,7 +22,7 @@ const p = await b.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
 await p.goto('http://localhost:3000/', { waitUntil: 'networkidle' })
 await p.waitForTimeout(1500)
 
-const sections = ['assinatura', 'trabalho', 'concept', 'instagram', 'contato']
+const sections = ['assinatura', 'trabalho', 'concept', 'cursos', 'instagram', 'contato']
 
 for (const id of sections) {
   await p.evaluate((sel) => {

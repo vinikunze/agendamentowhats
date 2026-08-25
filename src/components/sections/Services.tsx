@@ -7,7 +7,7 @@ import { Reveal, RevealItem, StaggerGroup } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { EASE } from '@/lib/motion'
 import { blurFor } from '@/content/images'
-import { hasServices, services } from '@/content/site'
+import { hasServices, sectionIndex, services } from '@/content/site'
 
 /**
  * Serviços.
@@ -30,7 +30,7 @@ export function Services() {
   return (
     <section id="servicos" className="section-y relative">
       <div className="shell">
-        <SectionHeading index="04" label="Serviços" />
+        <SectionHeading index={sectionIndex.servicos} label="Serviços" />
 
         <div className="relative mt-12 grid grid-cols-12 gap-x-6 lg:mt-16">
           <StaggerGroup as="ol" className="col-span-12 lg:col-span-7" gap={0.06}>

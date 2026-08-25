@@ -3,7 +3,7 @@ import { Reveal, RevealItem, StaggerGroup } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { maskReveal } from '@/lib/motion'
 import { blurFor, feedImages } from '@/content/images'
-import { draftCopy, social } from '@/content/site'
+import { draftCopy, sectionIndex, social } from '@/content/site'
 
 const { instagram } = draftCopy
 
@@ -21,7 +21,7 @@ export function InstagramStrip() {
   return (
     <section id="instagram" className="section-y relative">
       <div className="shell">
-        <SectionHeading index={instagram.index} label={instagram.label} />
+        <SectionHeading index={sectionIndex.instagram} label={instagram.label} />
 
         <div className="mt-12 grid grid-cols-12 items-end gap-x-6 gap-y-6 lg:mt-16">
           <Reveal className="col-span-12 lg:col-span-6">
