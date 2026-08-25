@@ -124,6 +124,7 @@ export function Header() {
             className="tap-none -my-2 flex items-center gap-3 py-2"
             aria-label={`${person.name} — início`}
           >
+            {/* Só aparece quando o arquivo real do monograma existir. */}
             <BrandMark className="h-7 w-auto shrink-0 md:h-8" />
             <span className="link-underline font-sans text-[0.8125rem] font-light uppercase tracking-[0.22em] md:text-sm">
               Bormann Jr.

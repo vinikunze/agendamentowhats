@@ -114,9 +114,31 @@ se o horário real for outro.
 - [ ] **`courses.detail`** — se quiser publicar formato, carga horária ou
       próximas turmas dos Cursos VIPs.
 - [ ] **`contact.email`** e **`contact.mapsUrl`** — opcionais.
-- [ ] **Logotipo oficial** — o monograma JB do header e do rodapé é uma
-      reconstrução tipográfica (`components/ui/BrandMark.tsx`). Com o SVG
-      original em mãos, só esse arquivo muda.
+- [ ] **Logotipo oficial** — ver abaixo.
+
+## Logotipo
+
+O logotipo do Concept tem um monograma "JB" entrelaçado dentro de uma
+moldura. **Ele não está no site**, e isso é deliberado: redesenhar de olho,
+a partir de uma imagem, produz algo *parecido* e errado — proporção,
+entrelaçamento e espessura nunca batem. Um logotipo quase certo passa pior
+impressão do que logotipo nenhum.
+
+Enquanto o arquivo original não chega, a marca aparece como assinatura
+tipográfica — o nome na tipografia do projeto, mais o "Concept Hair Expert"
+que é texto confirmado do logotipo. Isso é fiel.
+
+**Para ativar o logotipo real:**
+
+1. salve o arquivo em `public/images/brand/` (SVG de preferência; PNG com
+   fundo transparente também serve);
+2. preencha `brand.monogram` em `src/content/site.ts` com o caminho e as
+   dimensões.
+
+Ele volta a aparecer no header e no rodapé automaticamente. Há um
+`LEIA-ME.txt` na pasta com as mesmas instruções.
+
+---
 
 ## Fotografia
 
@@ -144,15 +166,27 @@ borda esquerda; no mobile vem inteiro no topo. Prefira um arquivo em retrato
 (3:4 ou mais alto) e com o rosto acima da metade da altura — o degradê e a
 tipografia trabalham a faixa inferior.
 
-### Para colocar a fotografia real
+### Para colocar a fotografia real — dois passos
 
 1. Salve o arquivo **no mesmo caminho e com o mesmo nome** que a chapa atual.
-2. Em `src/content/images.ts`, atualize `width` e `height` para as dimensões
-   reais do arquivo.
-3. **Reescreva o `alt`** descrevendo o que a foto realmente mostra. Os textos
-   atuais descrevem as chapas, porque é isso que está na tela.
-4. Se quiser regenerar as chapas restantes:
-   `npm run images` (aceita um filtro: `npm run images -- concept`).
+2. Rode `npm run images:web`.
+
+Largura, altura e as versões responsivas se atualizam sozinhas: as dimensões
+saem do próprio arquivo e entram no manifesto que `content/images.ts` lê.
+Ninguém precisa conferir número — que é justamente o tipo de erro que só
+aparece depois de publicado.
+
+Depois, **reescreva o `alt`** em `src/content/images.ts` descrevendo o que a
+foto realmente mostra. Esse passo é manual de propósito: só quem viu a foto
+sabe descrevê-la, e é o texto que uma pessoa cega ouve no lugar da imagem.
+Os textos atuais descrevem as chapas, porque é isso que está na tela.
+
+#### Pelo GitHub, sem instalar nada
+
+Dá para fazer tudo pelo navegador: entre na pasta
+`public/images/bormann/` no GitHub → **Add file → Upload files** → arraste a
+foto com o nome do arquivo que ela substitui → *Commit*. O workflow
+republica sozinho.
 
 A galeria de trabalho depende de proporções **diferentes entre si** — é o que
 separa uma galeria editorial de uma grade de Instagram. Ao substituir, prefira

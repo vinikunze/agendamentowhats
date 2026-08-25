@@ -88,6 +88,29 @@ export const social = {
 } as const
 
 /* -------------------------------------------------------------------------- */
+/* 1b. ARQUIVOS DE MARCA — PENDENTE                                            */
+/* -------------------------------------------------------------------------- */
+/**
+ * O logotipo do Concept tem um monograma "JB" entrelaçado numa moldura.
+ * Redesenhá-lo de olho dá algo *parecido* e errado — e logotipo quase certo
+ * passa pior impressão do que logotipo nenhum. Por isso o site hoje usa só a
+ * assinatura tipográfica (o nome na tipografia do projeto), que é fiel.
+ *
+ * PARA ATIVAR O LOGOTIPO REAL
+ *   1. salve o arquivo em `public/images/brand/` — SVG de preferência, ou PNG
+ *      com fundo transparente;
+ *   2. preencha abaixo com o caminho e as dimensões reais.
+ * Ele volta a aparecer no header e no rodapé automaticamente.
+ */
+
+export const brand = {
+  /** Ex.: { src: '/images/brand/monograma.svg', width: 88, height: 112 } */
+  monogram: null as { src: string; width: number; height: number } | null,
+  /** Lockup horizontal completo, se houver uma versão pronta. */
+  logo: null as { src: string; width: number; height: number } | null,
+}
+
+/* -------------------------------------------------------------------------- */
 /* 2. CONTATO — CONFIRMADO                                                     */
 /* -------------------------------------------------------------------------- */
 /**

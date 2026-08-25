@@ -59,9 +59,9 @@ for (const arquivo of arquivos) {
   // '/images/bormann/hero-portrait.jpg'
   const src = `/${relative(join(RAIZ, 'public'), arquivo).split(/[\\/]/).join('/')}`
 
-  const imagem = sharp(arquivo)
-  const { width: larguraOriginal } = await imagem.metadata()
-  if (!larguraOriginal) continue
+  const { width: larguraOriginal, height: alturaOriginal } =
+    await sharp(arquivo).metadata()
+  if (!larguraOriginal || !alturaOriginal) continue
 
   // A largura original entra na lista para que telas muito largas ainda
   // recebam o arquivo em resolução máxima.
@@ -88,7 +88,15 @@ for (const arquivo of arquivos) {
     geradas++
   }
 
-  manifesto[src] = { base: `/otimizadas/${base}`, larguras }
+  // As dimensões reais entram no manifesto para que `content/images.ts` não
+  // precise repeti-las à mão. Trocar uma foto passa a ser: salvar o arquivo,
+  // rodar `npm run images:web`, reescrever o alt. Sem número para conferir.
+  manifesto[src] = {
+    base: `/otimizadas/${base}`,
+    larguras,
+    width: larguraOriginal,
+    height: alturaOriginal,
+  }
 }
 
 await writeFile(

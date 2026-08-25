@@ -9,7 +9,6 @@ import {
   draftCopy,
   sectionIndex,
   social,
-  whatsappUrl,
 } from '@/content/site'
 
 const { finalCta } = draftCopy
@@ -56,20 +55,6 @@ export function FinalCta() {
                 {finalCta.secondary}
               </a>
             </Reveal>
-
-            {/* O WhatsApp só aparece se o número tiver sido confirmado. */}
-            {whatsappUrl && (
-              <Reveal delay={0.16}>
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline label text-muted"
-                >
-                  WhatsApp
-                </a>
-              </Reveal>
-            )}
 
             <Reveal delay={0.2}>
               <p className="label">

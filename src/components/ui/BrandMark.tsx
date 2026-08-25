@@ -1,73 +1,56 @@
-/**
- * Monograma da marca — o "JB" dentro do retângulo, como no logotipo do
- * Bormann Jr Concept.
- *
- * É uma reconstrução tipográfica, feita com a fonte do próprio site: fiel ao
- * arranjo (moldura, letras entrelaçadas, traço fino) sem ser um decalque do
- * desenho original.
- *
- * QUANDO O ARQUIVO OFICIAL CHEGAR: salve o SVG em
- * `public/images/brand/monograma.svg` e troque o corpo deste componente por
- * um `<img>` ou pelo SVG inline. Só este arquivo muda — header e rodapé
- * continuam iguais.
- */
-export function BrandMark({
-  className = '',
-  title,
-}: {
-  className?: string
-  /** Se informado, o monograma vira imagem com nome acessível. */
-  title?: string
-}) {
-  return (
-    <svg
-      viewBox="0 0 44 56"
-      className={`block ${className}`}
-      role={title ? 'img' : 'presentation'}
-      aria-label={title}
-      aria-hidden={title ? undefined : 'true'}
-      focusable="false"
-    >
-      {/* Moldura de traço fino. */}
-      <rect
-        x="0.6"
-        y="0.6"
-        width="42.8"
-        height="54.8"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-      />
+import Image from 'next/image'
+import { brand } from '@/content/site'
 
-      {/*
-        J e B entrelaçados: o B avança sobre a haste do J, que é o que dá ao
-        monograma a leitura de peça única em vez de duas letras vizinhas.
-      */}
-      <text
-        x="13"
-        y="38"
-        textAnchor="middle"
-        fill="currentColor"
-        style={{ fontFamily: 'var(--font-sans)', fontSize: '30px', fontWeight: 300 }}
-      >
-        J
-      </text>
-      <text
-        x="27"
-        y="38"
-        textAnchor="middle"
-        fill="currentColor"
-        style={{ fontFamily: 'var(--font-sans)', fontSize: '30px', fontWeight: 300 }}
-      >
-        B
-      </text>
-    </svg>
+/**
+ * A marca no site.
+ *
+ * POR QUE NÃO HÁ UM MONOGRAMA DESENHADO AQUI
+ * O logotipo do Bormann Jr Concept tem um monograma "JB" entrelaçado dentro
+ * de uma moldura — um desenho de letras específico, registrado. Redesenhá-lo
+ * de olho, a partir de uma imagem, produz algo *parecido* e errado: proporção,
+ * entrelaçamento e espessura nunca batem. Um logotipo quase certo passa pior
+ * impressão do que logotipo nenhum.
+ *
+ * Então, enquanto o arquivo original não chega, a marca aparece só como
+ * assinatura tipográfica — que é fiel, porque é o nome dele na tipografia do
+ * site.
+ *
+ * PARA COLOCAR O LOGOTIPO REAL
+ *   1. salve o arquivo em `public/images/brand/` (SVG de preferência; PNG com
+ *      fundo transparente também serve);
+ *   2. preencha `brand.monogram` / `brand.logo` em `src/content/site.ts`.
+ * O monograma volta a aparecer no header e no rodapé, sem mexer em mais nada.
+ */
+
+type MarkProps = {
+  className?: string
+  /** Nome acessível. Sem ele, a marca é tratada como decorativa. */
+  title?: string
+}
+
+/**
+ * Monograma. Só renderiza se o arquivo real tiver sido configurado —
+ * caso contrário devolve `null` e quem chama simplesmente não mostra nada.
+ */
+export function BrandMark({ className = '', title }: MarkProps) {
+  if (!brand.monogram) return null
+
+  return (
+    <Image
+      src={brand.monogram.src}
+      alt={title ?? ''}
+      width={brand.monogram.width}
+      height={brand.monogram.height}
+      priority
+      className={className}
+      aria-hidden={title ? undefined : 'true'}
+    />
   )
 }
 
 /**
- * Assinatura completa: monograma + wordmark + tagline, empilhados como no
- * logotipo. Usada no rodapé; o header usa só o monograma com o nome ao lado.
+ * Assinatura da marca: monograma (quando existir) + wordmark + tagline.
+ * Usada no rodapé.
  */
 export function BrandLockup({
   wordmark,
@@ -81,11 +64,13 @@ export function BrandLockup({
   return (
     <div className={`flex items-center gap-4 ${className}`}>
       <BrandMark className="h-12 w-auto shrink-0" />
+
       <div className="min-w-0">
-        <p className="font-sans text-[clamp(0.9rem,2.4vw,1.25rem)] font-light uppercase leading-none tracking-[0.2em]">
+        <p className="font-sans text-[clamp(0.95rem,2.4vw,1.2rem)] font-light uppercase leading-none tracking-[0.2em]">
           {wordmark}
         </p>
-        <p className="label mt-2 tracking-[0.34em]">{tagline}</p>
+        {/* Assinatura confirmada no logotipo — texto, não desenho. */}
+        <p className="label mt-2.5 tracking-[0.32em]">{tagline}</p>
       </div>
     </div>
   )

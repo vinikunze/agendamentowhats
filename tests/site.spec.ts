@@ -26,7 +26,10 @@ async function esperarSecaoVisivel(page: Page, id: string) {
           const r = el.getBoundingClientRect()
           return r.top < window.innerHeight && r.bottom > 0
         }, id),
-      { timeout: 10_000 },
+      // Folga generosa: o scroll suave do Lenis percorre milhares de pixels e
+      // a duração real depende da carga da máquina. Com vários workers em
+      // paralelo, 10s estouravam sem que houvesse nada errado com a página.
+      { timeout: 25_000 },
     )
     .toBe(true)
 }

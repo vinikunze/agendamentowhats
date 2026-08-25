@@ -6,7 +6,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/feed-02.jpg": {
     "base": "/otimizadas/bormann__feed-02",
@@ -15,7 +17,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/feed-03.jpg": {
     "base": "/otimizadas/bormann__feed-03",
@@ -24,7 +28,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/feed-04.jpg": {
     "base": "/otimizadas/bormann__feed-04",
@@ -33,7 +39,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/feed-05.jpg": {
     "base": "/otimizadas/bormann__feed-05",
@@ -42,7 +50,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/feed-06.jpg": {
     "base": "/otimizadas/bormann__feed-06",
@@ -51,7 +61,9 @@
       640,
       828,
       900
-    ]
+    ],
+    "width": 900,
+    "height": 1125
   },
   "/images/bormann/hero-portrait.jpg": {
     "base": "/otimizadas/bormann__hero-portrait",
@@ -62,7 +74,9 @@
       1080,
       1440,
       1600
-    ]
+    ],
+    "width": 1600,
+    "height": 2133
   },
   "/images/bormann/signature-01.jpg": {
     "base": "/otimizadas/bormann__signature-01",
@@ -72,7 +86,9 @@
       828,
       1080,
       1200
-    ]
+    ],
+    "width": 1200,
+    "height": 1500
   },
   "/images/bormann/work-01.jpg": {
     "base": "/otimizadas/bormann__work-01",
@@ -82,7 +98,9 @@
       828,
       1080,
       1200
-    ]
+    ],
+    "width": 1200,
+    "height": 1500
   },
   "/images/bormann/work-02.jpg": {
     "base": "/otimizadas/bormann__work-02",
@@ -92,7 +110,9 @@
       828,
       1080,
       1400
-    ]
+    ],
+    "width": 1400,
+    "height": 1050
   },
   "/images/bormann/work-03.jpg": {
     "base": "/otimizadas/bormann__work-03",
@@ -102,7 +122,9 @@
       828,
       1080,
       1100
-    ]
+    ],
+    "width": 1100,
+    "height": 1650
   },
   "/images/bormann/work-04.jpg": {
     "base": "/otimizadas/bormann__work-04",
@@ -112,7 +134,9 @@
       828,
       1080,
       1300
-    ]
+    ],
+    "width": 1300,
+    "height": 1300
   },
   "/images/bormann/work-05.jpg": {
     "base": "/otimizadas/bormann__work-05",
@@ -123,7 +147,9 @@
       1080,
       1440,
       1500
-    ]
+    ],
+    "width": 1500,
+    "height": 1000
   },
   "/images/bormann/work-06.jpg": {
     "base": "/otimizadas/bormann__work-06",
@@ -133,7 +159,9 @@
       828,
       1080,
       1200
-    ]
+    ],
+    "width": 1200,
+    "height": 1600
   },
   "/images/concept/space-detail.jpg": {
     "base": "/otimizadas/concept__space-detail",
@@ -143,7 +171,9 @@
       828,
       1080,
       1100
-    ]
+    ],
+    "width": 1100,
+    "height": 1375
   },
   "/images/concept/space-wide.jpg": {
     "base": "/otimizadas/concept__space-wide",
@@ -155,6 +185,8 @@
       1440,
       1920,
       2000
-    ]
+    ],
+    "width": 2000,
+    "height": 1125
   }
 }

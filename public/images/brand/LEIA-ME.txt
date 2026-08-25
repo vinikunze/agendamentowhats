@@ -1,0 +1,33 @@
+ARQUIVOS DE MARCA
+=================
+
+Coloque aqui o logotipo oficial do Bormann Jr Concept.
+
+  monograma.svg   o "JB" na moldura (SVG de preferência; PNG com fundo
+                  transparente também serve)
+  logo.svg        o lockup horizontal completo, se houver
+
+Depois, preencha em src/content/site.ts:
+
+  export const brand = {
+    monogram: { src: '/images/brand/monograma.svg', width: 88, height: 112 },
+    logo: null,
+  }
+
+O monograma volta a aparecer no header e no rodapé automaticamente.
+
+Enquanto isso, o site usa apenas a assinatura tipográfica — o nome na
+tipografia do projeto. É uma escolha deliberada: redesenhar um logotipo
+registrado "de olho" produz algo parecido e errado, e logotipo quase certo
+passa pior impressão do que logotipo nenhum.
+
+
+FOTOGRAFIA
+==========
+
+As fotos vão em ../bormann/ e ../concept/, com os mesmos nomes dos arquivos
+que já estão lá. Depois rode:
+
+  npm run images:web
+
+Largura, altura e as versões responsivas se atualizam sozinhas.
