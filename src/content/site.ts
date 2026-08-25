@@ -272,8 +272,19 @@ export const nav = [
 /* -------------------------------------------------------------------------- */
 
 export const seo = {
-  /** TODO cliente — trocar pelo domínio real antes do deploy. */
-  siteUrl: 'https://bormannjr.com.br',
+  /**
+   * De onde o site é servido. Define canonical, sitemap, robots e as URLs
+   * absolutas do OpenGraph.
+   *
+   * Vem do ambiente para que a mesma base sirva a publicação de teste no
+   * GitHub Pages e o domínio definitivo, sem editar código.
+   *
+   * TODO cliente — quando o domínio próprio existir, é só apontar
+   * `NEXT_PUBLIC_SITE_URL` para ele (ou trocar o padrão abaixo).
+   */
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ??
+    'https://bormannjr.com.br',
   title: `${person.name} — ${person.role} em ${concept.city}`,
   titleTemplate: `%s — ${person.name}`,
   description: `${person.name}, hair stylist e Expert Team Wella Professionals Brasil. Diretor criativo do ${concept.name} — ${concept.tagline} em ${concept.city}, ${concept.stateFull}. Atendimento personalizado, terça a sábado.`,

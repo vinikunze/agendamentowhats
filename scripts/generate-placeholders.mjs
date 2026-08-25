@@ -133,7 +133,10 @@ for (const img of IMAGES) {
   await mkdir(dirname(out), { recursive: true })
 
   const svg = plate(img)
-  const jpeg = await sharp(svg, { density: 144 })
+  // Densidade padrão (72dpi): o SVG rasteriza exatamente nas dimensões
+  // declaradas no catálogo. Com 144 saía tudo no dobro — quatro vezes mais
+  // pixels do que `content/images.ts` anuncia, sem ganho nenhum.
+  const jpeg = await sharp(svg)
     .jpeg({ quality: 88, chromaSubsampling: '4:4:4', mozjpeg: true })
     .toBuffer()
 

@@ -3,6 +3,10 @@ import { expect, test, type Page } from '@playwright/test'
 /**
  * Testes funcionais da homepage, em desktop e mobile.
  *
+ * A navegação usa caminho RELATIVO (`'./'`). Um `'/'` absoluto descarta o
+ * prefixo do `baseURL` e cairia na raiz do domínio — o que quebra quando o
+ * site é servido sob um subcaminho, como no GitHub Pages.
+ *
  * Cobrem o que quebra silenciosamente: menu, âncoras, links externos,
  * conteúdo estourando a viewport e erros no console.
  */
@@ -41,7 +45,7 @@ test.describe('homepage', () => {
   test('abre, renderiza o hero e não registra erros', async ({ page }) => {
     const errors = watchErrors(page)
 
-    await page.goto('/')
+    await page.goto('./')
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page).toHaveTitle(/Bormann Jr/i)
@@ -55,7 +59,7 @@ test.describe('homepage', () => {
   })
 
   test('expõe as seções principais', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     for (const id of ['assinatura', 'trabalho', 'concept', 'cursos', 'instagram', 'contato']) {
       await expect(page.locator(`#${id}`)).toBeAttached()
@@ -63,7 +67,7 @@ test.describe('homepage', () => {
   })
 
   test('a numeração das seções é sequencial, sem pulo nem repetição', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     // Os índices são derivados do que está ativo em site.ts. Se uma seção
     // for ligada ou desligada, a sequência tem de continuar fechando.
@@ -78,7 +82,7 @@ test.describe('homepage', () => {
   })
 
   test('os links do Instagram apontam para os perfis reais', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const pessoal = page
       .locator('a[href="https://www.instagram.com/bormannjr/"]')
@@ -92,7 +96,7 @@ test.describe('homepage', () => {
   })
 
   test('o contato exibido é o confirmado, e nada além dele', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     // O WhatsApp das duas bios do Instagram, que é também o telefone da
     // ficha do Google. Se este número mudar em site.ts, o teste avisa.
@@ -113,7 +117,7 @@ test.describe('homepage', () => {
   })
 
   test('não inventa o que não foi confirmado', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const texto = (await page.locator('body').innerText()).toLowerCase()
 
@@ -137,7 +141,7 @@ test.describe('homepage', () => {
   })
 
   test('a seção de cursos leva ao WhatsApp com mensagem pronta', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await expect(page.locator('#cursos')).toContainText('Cursos VIPs')
     await expect(
@@ -146,7 +150,7 @@ test.describe('homepage', () => {
   })
 
   test('nenhum scroll horizontal em nenhum ponto da página', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const height = await page.evaluate(() => document.documentElement.scrollHeight)
     const step = 600
@@ -169,14 +173,14 @@ test.describe('navegação desktop', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) < 1024, 'somente desktop')
 
   test('a âncora do menu leva à seção correspondente', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await page.getByRole('link', { name: 'Concept', exact: true }).click()
     await esperarSecaoVisivel(page, 'concept')
   })
 
   test('o header ganha fundo depois do scroll', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const header = page.locator('header')
     await expect(header).toHaveAttribute('data-scrolled', 'false')
@@ -190,7 +194,7 @@ test.describe('navegação mobile', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) >= 1024, 'somente mobile')
 
   test('o menu abre, navega e fecha', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const abrir = page.getByRole('button', { name: 'Abrir menu' })
     await expect(abrir).toBeVisible()
@@ -206,7 +210,7 @@ test.describe('navegação mobile', () => {
   })
 
   test('a tecla Esc fecha o menu', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await page.getByRole('button', { name: 'Abrir menu' }).click()
     await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible()
@@ -216,7 +220,7 @@ test.describe('navegação mobile', () => {
   })
 
   test('a galeria vira lista vertical, sem fita horizontal', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     // A fita horizontal usa `w-max`; no mobile ela não deve existir.
     await expect(page.locator('#trabalho .w-max')).toHaveCount(0)

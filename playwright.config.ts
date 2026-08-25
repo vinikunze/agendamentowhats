@@ -10,6 +10,14 @@ const executablePath = process.env.CHROMIUM_PATH || undefined
 /** Contêineres que rodam como root precisam do sandbox desligado. */
 const args = process.getuid?.() === 0 ? ['--no-sandbox'] : []
 
+/**
+ * Por padrão sobe o servidor de desenvolvimento. Com `PLAYWRIGHT_BASE_URL`
+ * apontado para outro endereço, testa o que já estiver no ar — é assim que a
+ * mesma suíte roda contra o export estático do GitHub Pages.
+ */
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000'
+const servidorExterno = Boolean(process.env.PLAYWRIGHT_BASE_URL)
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -18,7 +26,7 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL,
     trace: 'on-first-retry',
     locale: 'pt-BR',
   },
@@ -43,10 +51,12 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
+  webServer: servidorExterno
+    ? undefined
+    : {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: true,
+        timeout: 120_000,
+      },
 })

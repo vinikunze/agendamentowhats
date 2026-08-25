@@ -280,8 +280,9 @@ ou repetir, ou se entrar na página um superlativo não verificado
 
 ### Estado atual
 
-- lint, typecheck e build de produção: limpos
-- Playwright: 23 passando (desktop + mobile)
+- lint, typecheck e build de produção: limpos, nos dois modos
+- Playwright: 23 passando (desktop + mobile), contra o servidor Next **e**
+  contra o export estático
 - axe-core (WCAG 2.1 AA + best practice): 0 violações
 - CLS 0 · LCP ~272ms no desktop, ~1,37s no mobile
 - nenhum scroll horizontal, nenhum erro de console, em nenhum dos 8 viewports
@@ -292,6 +293,13 @@ Se o Chromium do sistema não for o que o Playwright baixaria, aponte:
 
 ```bash
 CHROMIUM_PATH=/caminho/para/chromium npm run test
+```
+
+Para testar contra um endereço que já esteja no ar (o export estático, por
+exemplo), aponte a base — a suíte não sobe servidor nenhum:
+
+```bash
+PLAYWRIGHT_BASE_URL=http://localhost:4321/bormannjrconcept/ npm run test
 ```
 
 ---
@@ -305,29 +313,64 @@ ampliados em ponteiro grosso sem alterar o desenho no desktop.
 
 ---
 
-## Publicar no GitHub
+## Publicar
 
 O repositório é
-[vinikunze/bormannjrconcept](https://github.com/vinikunze/bormannjrconcept).
-O trabalho está commitado na branch `claude/bormann-jr-premium-site-i25vzv`.
+[vinikunze/bormannjrconcept](https://github.com/vinikunze/bormannjrconcept),
+e o trabalho vive na branch `claude/bormann-jr-premium-site-i25vzv`.
 
-Para que as edições passem a ir direto para lá, o app do Claude precisa de
-permissão de escrita neste repositório — hoje o push volta com `403`. Um dos
-dois caminhos resolve:
+### GitHub Pages (já configurado)
 
-1. **Instalar/autorizar o app no repositório**
-   → https://github.com/apps/claude/installations/select_target
-   Escolha a conta `vinikunze` e marque `bormannjrconcept` (ou "All
-   repositories").
+Há um workflow em `.github/workflows/deploy.yml` que faz build e publica a
+cada push.
 
-2. **Reconectar o GitHub na sua conta Claude**
-   → claude.ai → Settings → Connectors → GitHub → reconectar.
+**Falta um passo manual, uma única vez:**
 
-Feito isso, o push acontece normalmente:
+> Settings → Pages → *Build and deployment* → **Source: GitHub Actions**
+
+Enquanto o Source estiver em *Deploy from a branch*, o Pages serve o
+`README.md` renderizado pelo Jekyll em vez do site — que foi exatamente o que
+aconteceu na primeira tentativa. E o Jekyll ignora pastas iniciadas por `_`,
+então `_next/` sumiria mesmo que o build subisse. Por isso o workflow grava
+um `.nojekyll`.
+
+Depois disso o site fica em
+`https://vinikunze.github.io/bormannjrconcept/`.
+
+### Os dois modos de build
+
+Um host estático não roda Node, então o otimizador de imagens do Next — que
+é um serviço em tempo de requisição — não existe lá. O caminho preguiçoso
+seria `images.unoptimized: true`, servindo o JPEG original do tamanho que for
+para qualquer tela. Num site em que a fotografia é o conteúdo, isso joga fora
+o que mais pesa no carregamento.
+
+Então o projeto tem dois modos:
+
+| | Padrão | `GITHUB_PAGES=true` |
+|---|---|---|
+| Saída | servidor Next | HTML estático em `out/` |
+| Imagens | otimizador do Next (AVIF/WebP em tempo real) | variantes WebP pré-geradas + loader próprio |
+| Onde roda | dev, Vercel, Cloudflare, servidor próprio | GitHub Pages |
 
 ```bash
-git push -u origin claude/bormann-jr-premium-site-i25vzv
+npm run build          # modo padrão
+npm run build:pages    # variantes + export estático
 ```
+
+O `srcset` responsivo continua existindo nos dois; só muda **quando** as
+variantes são geradas. As larguras saem de `scripts/optimize-images.mjs`.
+
+### Domínio próprio
+
+Quando existir, aponte `NEXT_PUBLIC_SITE_URL` para ele (no workflow, ou no
+painel do host). Canonical, sitemap, robots e OpenGraph acompanham sozinhos —
+nada de editar código.
+
+Para um site desta natureza, vale considerar um host com Node (Vercel,
+Cloudflare Pages): mantém o otimizador nativo, aceita domínio próprio sem
+subcaminho e publica direto deste repositório. O modo estático continua
+disponível de qualquer forma.
 
 ---
 
