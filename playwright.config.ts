@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 /**
  * O Chromium deste ambiente é uma build diferente da que o @playwright/test
@@ -20,6 +22,9 @@ const servidorExterno = Boolean(process.env.PLAYWRIGHT_BASE_URL)
 
 export default defineConfig({
   testDir: './tests',
+  testMatch: '**/*.spec.ts',
+  outputDir: join(tmpdir(), 'agenda-da-oficina-playwright'),
+  workers: 2,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -34,7 +39,10 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop',
-      use: { ...devices['Desktop Chrome'], launchOptions: { executablePath, args } },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: { executablePath, args },
+      },
     },
     {
       // Emulação de iPhone sobre Chromium. O descritor `iPhone 13` do
