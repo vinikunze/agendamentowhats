@@ -97,15 +97,31 @@ formulários, remarcação, cancelamento, filtros, recuperação de entrada inv�
 reinício, navegação por teclado, console e acessibilidade com axe. Os artefatos
 vão para o diretório temporário do sistema, fora do repositório.
 
-## Publicação estática opcional
+## Publicação no GitHub Pages
+
+O Pages atual serve a raiz da branch. Por isso, `index.html`, `_next/` e os
+demais arquivos exportados estão versionados na raiz, com `.nojekyll` para
+preservar as pastas do Next. Não edite esses arquivos gerados diretamente.
+Para atualizar a demonstração nesse modo:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/agendamentowhats npm run prepare:pages
+```
+
+Confira e envie as alterações geradas junto com o código-fonte. O script
+atualiza somente os caminhos conhecidos da exportação, mantendo `src/` intacto.
+A raiz passa a servir o aplicativo, em vez do README renderizado pelo Jekyll.
+
+Se o Pages for alterado para publicação por **GitHub Actions**, o workflow
+também suporta esse modo. Para gerar somente o artefato nesse caso:
 
 ```bash
 NEXT_PUBLIC_BASE_PATH=/agendamentowhats npm run build:pages
 ```
 
 O resultado fica em `out/`. O workflow utiliza o nome real do repositório para o
-subcaminho. No GitHub Pages, selecione **GitHub Actions** como origem da publicação.
-O workflow foi atualizado; nenhuma publicação é feita pelos comandos locais.
+subcaminho e só executa o deploy por Actions quando esse é o modo configurado.
+Os comandos locais geram arquivos; o envio ao GitHub inicia a publicação.
 A demonstração permanece local por navegador mesmo se hospedada publicamente.
 
 ## Organização
