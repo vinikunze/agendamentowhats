@@ -1,0 +1,40 @@
+# Backend WhatsApp: serviço pago + disco persistente.
+# Revise o preço no Render antes de criar. Não hospeda a demonstração web.
+services:
+  - type: web
+    name: agenda-da-oficina-whatsapp
+    runtime: docker
+    plan: starter
+    branch: claude/bormann-jr-premium-site-i25vzv
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    autoDeploy: false
+    numInstances: 1
+    healthCheckPath: /healthz
+    disk:
+      name: agenda-whatsapp-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        generateValue: true
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_GRAPH_VERSION
+        sync: false
+      - key: WHATSAPP_TEAM_JSON
+        sync: false
+      - key: DATABASE_PATH
+        value: /data/agenda.sqlite
+      - key: WORKSHOP_TIMEZONE
+        value: America/Cuiaba
+      - key: WORKSHOP_SUMMARY_TIME
+        value: '07:00'
+      - key: WHATSAPP_TEMPLATE_LANGUAGE
+        value: pt_BR
+      - key: PORT
+        value: '8080'

@@ -1,7 +1,14 @@
 export const DEMO_TODAY = '2026-10-05'
 export const DEMO_TOMORROW = '2026-10-06'
 export const MECHANICS = ['João', 'Pedro', 'Marcos'] as const
-export type Mechanic = (typeof MECHANICS)[number]
+export type Mechanic = string
+
+export type CommandContext = {
+  today?: string
+  mechanics?: readonly string[]
+  clock?: string
+  live?: boolean
+}
 export type Status =
   | 'pending'
   | 'scheduled'
@@ -75,14 +82,18 @@ export function isValidDate(value: string): boolean {
   )
 }
 
-export function parseDate(value: string): string | null {
+export function parseDate(value: string, today = DEMO_TODAY): string | null {
   const date = normalize(value).replace(/^dia\s+/, '')
-  if (date === 'hoje') return DEMO_TODAY
-  if (date === 'amanha') return DEMO_TOMORROW
+  if (date === 'hoje') return today
+  if (date === 'amanha') {
+    const tomorrow = new Date(`${today}T12:00:00Z`)
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
+    return tomorrow.toISOString().slice(0, 10)
+  }
   if (isValidDate(date)) return date
   const short = date.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/)
   if (short) {
-    const result = `${short[3] ?? '2026'}-${short[2].padStart(2, '0')}-${short[1].padStart(2, '0')}`
+    const result = `${short[3] ?? today.slice(0, 4)}-${short[2].padStart(2, '0')}-${short[1].padStart(2, '0')}`
     return isValidDate(result) ? result : null
   }
   const days = [
@@ -96,7 +107,7 @@ export function parseDate(value: string): string | null {
   ]
   const day = days.indexOf(date.replace(/-feira$/, ''))
   if (day === -1) return null
-  const result = new Date(`${DEMO_TODAY}T12:00:00Z`)
+  const result = new Date(`${today}T12:00:00Z`)
   result.setUTCDate(result.getUTCDate() + ((day - result.getUTCDay() + 7) % 7))
   return result.toISOString().slice(0, 10)
 }
@@ -184,7 +195,9 @@ export function createInitialState(): AgendaState {
 type ParsedBooking = Omit<Appointment, 'id' | 'status'>
 type BookingResult = { booking: ParsedBooking } | { error: string }
 
-export function parseBooking(input: string): BookingResult {
+export function parseBooking(input: string, context: CommandContext = {}): BookingResult {
+  const today = context.today ?? DEMO_TODAY
+  const mechanics = context.mechanics ?? MECHANICS
   const match = input
     .trim()
     .match(
@@ -195,7 +208,7 @@ export function parseBooking(input: string): BookingResult {
       error:
         'Use este formato:\nAgendar amanhã às 8h: Amarok, troca de 4 pneus.\nVocê também pode usar uma data, como 07/10, ou abrir “Novo agendamento”.',
     }
-  const date = parseDate(match[1])
+  const date = parseDate(match[1], today)
   const hour = Number(match[2])
   const minute = Number(match[3] ?? '0')
   if (!date || hour > 23 || minute > 59)
@@ -203,10 +216,10 @@ export function parseBooking(input: string): BookingResult {
       error:
         'Confira a data e o horário. Exemplo: Agendar 07/10 às 9h30: Gol, troca de óleo.',
     }
-  if (date < DEMO_TODAY)
+  if (date < today)
     return {
       error:
-        'Escolha uma data a partir de 05/10/2026, o dia de referência desta demonstração.',
+        `Escolha uma data a partir de ${formatDate(today)}/${today.slice(0, 4)}.`,
     }
   let details = match[4].replace(/[.\s]+$/, '')
   let mechanic: Mechanic | null = null
@@ -215,12 +228,12 @@ export function parseBooking(input: string): BookingResult {
   )
   if (assignee) {
     mechanic =
-      MECHANICS.find((name) => normalize(name) === normalize(assignee[1])) ??
+      mechanics.find((name) => normalize(name) === normalize(assignee[1])) ??
       null
     if (!mechanic)
       return {
         error:
-          'Nesta demonstração, os mecânicos são João, Pedro e Marcos. Você também pode deixar sem responsável.',
+          `Os mecânicos cadastrados são ${mechanics.join(', ')}. Você também pode deixar sem responsável.`,
       }
     details = details.slice(0, assignee.index)
   }
@@ -259,7 +272,10 @@ export function processCommand(
   previous: AgendaState,
   channel: Channel,
   input: string,
+  context: CommandContext = {},
 ): AgendaState {
+  const today = context.today ?? DEMO_TODAY
+  const mechanics = context.mechanics ?? MECHANICS
   const text = input.trim().slice(0, 500)
   if (!text) return previous
   const state: AgendaState = {
@@ -267,11 +283,11 @@ export function processCommand(
     appointments: previous.appointments.map((a) => ({ ...a })),
     messages: [...previous.messages],
   }
-  const clock = channel.startsWith('updates:')
+  const clock = context.clock ?? (channel.startsWith('updates:')
     ? '09:05'
     : channel === 'agenda'
       ? '07:00'
-      : '15:43'
+      : '15:43')
   function message(
     target: Channel,
     body: string,
@@ -295,11 +311,11 @@ export function processCommand(
     message(channel, body, title, appointmentId)
   }
   function notifyTeam(item: Appointment, title: string) {
-    for (const name of MECHANICS)
+    for (const name of mechanics)
       message(`team:${name}`, appointmentDetails(item), title, item.id)
   }
   const actor = channel.includes(':')
-    ? (channel.split(':')[1] as Mechanic)
+    ? (channel.slice(channel.indexOf(':') + 1) as Mechanic)
     : null
   const command = normalize(text)
   message(channel, text, undefined, undefined, 'user')
@@ -309,7 +325,7 @@ export function processCommand(
       reply('Novos agendamentos são feitos na conversa da recepção.')
       return state
     }
-    const result = parseBooking(text)
+    const result = parseBooking(text, context)
     if ('error' in result) {
       reply(result.error, 'Vamos conferir a mensagem')
       return state
@@ -340,7 +356,7 @@ export function processCommand(
 
   const agenda = command.match(/^agenda(?:\s+(.+))?$/)
   if (agenda) {
-    const date = parseDate(agenda[1] || 'hoje')
+    const date = parseDate(agenda[1] || 'hoje', today)
     if (!date) {
       reply('Peça “Agenda hoje”, “Agenda amanhã” ou “Agenda 07/10”.')
       return state
@@ -377,7 +393,7 @@ export function processCommand(
     ['confirmar', 'cancelar', 'remarcar'].includes(verb) &&
     channel !== 'reception'
   ) {
-    reply('A recepção confirma, cancela e remarca. Use a primeira conversa.')
+    reply(context.live ? 'Somente a recepção pode confirmar, cancelar e remarcar.' : 'A recepção confirma, cancela e remarca. Use a primeira conversa.')
     return state
   }
   if (verb === 'confirmar') {
@@ -405,7 +421,9 @@ export function processCommand(
     }
     item.status = 'scheduled'
     reply(
-      'A equipe recebeu o aviso nesta demonstração.\nVocê pode remarcar por aqui.',
+      context.live
+        ? 'Agendamento salvo. Os avisos para a equipe com notificações ativas foram colocados na fila de envio.'
+        : 'A equipe recebeu o aviso nesta demonstração.\nVocê pode remarcar por aqui.',
       'Agendamento salvo',
       item.id,
     )
@@ -434,16 +452,16 @@ export function processCommand(
     const match = rest?.match(
       /^(?:para\s+)?(.+?)\s+as?\s+(\d{1,2})(?:(?::|h)(\d{2})?)?$/,
     )
-    const date = match ? parseDate(match[1]) : null
+    const date = match ? parseDate(match[1], today) : null
     if (
       !match ||
       !date ||
-      date < DEMO_TODAY ||
+      date < today ||
       Number(match[2]) > 23 ||
       Number(match[3] ?? '0') > 59
     ) {
       reply(
-        'Use: Remarcar 23 para 07/10 às 10h. A data deve ser a partir de 05/10/2026.',
+        `Use: Remarcar ${id} para amanhã às 10h. A data deve ser a partir de ${formatDate(today)}.`,
       )
       return state
     }
@@ -471,7 +489,7 @@ export function processCommand(
   }
   if (!actor) {
     reply(
-      'Selecione um mecânico na segunda conversa para assumir ou atualizar o serviço.',
+      context.live ? 'Somente um mecânico cadastrado pode assumir ou atualizar o serviço.' : 'Selecione um mecânico na segunda conversa para assumir ou atualizar o serviço.',
     )
     return state
   }
@@ -551,7 +569,7 @@ export function processCommand(
     }
     item.status = 'completed'
     reply(
-      `${item.vehicle} · ${item.service}\nFinalizado por ${actor}.\nA recepção recebeu a atualização.`,
+      `${item.vehicle} · ${item.service}\nFinalizado por ${actor}.\n${context.live ? 'Atualização registrada na agenda da recepção.' : 'A recepção recebeu a atualização.'}`,
       `Serviço #${id} concluído`,
       item.id,
     )
@@ -595,7 +613,7 @@ export function parseSavedState(raw: string): AgendaState | null {
         typeof a.time === 'string' &&
         /^([01]\d|2[0-3]):[0-5]\d$/.test(a.time) &&
         Object.hasOwn(STATUS_LABELS, a.status) &&
-        (a.mechanic === null || MECHANICS.includes(a.mechanic)),
+        (a.mechanic === null || MECHANICS.some((name) => name === a.mechanic)),
     )
     const channels: string[] = [
       'reception',

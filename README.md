@@ -145,3 +145,9 @@ Mensagens proativas precisam respeitar consentimento, janela de atendimento e re
 de templates vigentes do provedor. Credenciais devem existir somente no servidor.
 A recepção e os mecânicos poderão usar o WhatsApp; esta interface serve para
 validar o fluxo, sem exigir que a equipe acesse um sistema web durante o trabalho.
+
+## Conexão oficial com o WhatsApp
+
+O serviço de integração está em `backend/`. Ele usa a Cloud API da Meta, agenda SQLite persistente, telefones autorizados e fila de avisos. A ativação real ainda depende de credenciais Meta e hospedagem HTTPS com disco persistente. O GitHub Pages continua sendo a demonstração local.
+
+Siga o [guia de ativação e teste](docs/whatsapp.md). Verificação sem mensagens reais: `npm run test:whatsapp`.

@@ -1,0 +1,14 @@
+# Referência: cadastre os valores no painel de secrets do host.
+# Não preencha este arquivo versionado com credenciais ou telefones reais.
+WHATSAPP_ACCESS_TOKEN=
+WHATSAPP_APP_SECRET=
+WHATSAPP_VERIFY_TOKEN=
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_GRAPH_VERSION=
+WHATSAPP_TEAM_JSON=
+DATABASE_PATH=/data/agenda.sqlite
+WORKSHOP_TIMEZONE=America/Cuiaba
+WORKSHOP_SUMMARY_TIME=07:00
+WHATSAPP_NOTICE_TEMPLATE=
+WHATSAPP_TEMPLATE_LANGUAGE=pt_BR
+PORT=8080

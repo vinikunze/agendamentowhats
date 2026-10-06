@@ -48,3 +48,9 @@ next-env.d.ts
 # export estático e variantes de imagem — gerados no build/CI
 /out
 /public/otimizadas
+
+# dados privados do serviço WhatsApp
+/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
